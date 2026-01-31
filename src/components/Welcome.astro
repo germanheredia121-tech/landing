@@ -1,5 +1,5 @@
 ---
-// index.astro - Inti Huasi Hotel Carlos Paz
+// index.astro - Inti Huasi Hotel Carlos Paz con Formulario de WhatsApp
 ---
 
 <!DOCTYPE html>
@@ -90,11 +90,63 @@
             transition: transform 0.3s ease;
         }
         .wsp-float:hover { transform: scale(1.1); }
+
+        /* Estilos para el Modal */
+        #booking-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #booking-modal.active { display: flex; }
     </style>
 </head>
 <body class="bg-[#f8f8f5] dark:bg-[#181611] text-slate-900 dark:text-white transition-colors duration-500">
 
-<a href="https://wa.me/5493364014656" class="wsp-float" target="_blank" aria-label="WhatsApp">
+<div id="booking-modal">
+    <div class="bg-[#1f1c15] border border-primary/30 p-8 rounded-2xl max-w-md w-full relative">
+        <button id="close-modal" class="absolute top-4 right-4 text-white/50 hover:text-primary">✕</button>
+        <h2 class="serif-text text-2xl text-primary mb-2">Solicitar Reserva</h2>
+        <p class="text-white/60 text-[10px] uppercase tracking-widest mb-6">Completa los datos para el presupuesto</p>
+        
+        <form id="wsp-form" class="space-y-4">
+            <div>
+                <label class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Nombre</label>
+                <input type="text" id="form-name" required class="w-full bg-white/5 border border-white/10 p-3 text-white focus:border-primary outline-none text-sm">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Check-In</label>
+                    <input type="date" id="form-in" required class="w-full bg-white/5 border border-white/10 p-3 text-white focus:border-primary outline-none text-xs">
+                </div>
+                <div>
+                    <label class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Check-Out</label>
+                    <input type="date" id="form-out" required class="w-full bg-white/5 border border-white/10 p-3 text-white focus:border-primary outline-none text-xs">
+                </div>
+            </div>
+            <div>
+    <label class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Personas</label>
+    <select id="form-guests" class="w-full bg-white/5 border border-white/10 p-3 text-white focus:border-primary outline-none text-sm appearance-none">
+        <option value="1" class="text-black">1 Persona</option>
+        <option value="2" selected class="text-black">2 Personas</option>
+        <option value="3" class="text-black">3 Personas</option>
+        <option value="4" class="text-black">4 Personas</option>
+		<option value="4" class="text-black">5 o mas Personas</option>
+    </select>
+</div>
+            <button type="submit" class="w-full bg-primary text-black font-bold py-4 uppercase text-[10px] tracking-widest hover:bg-white transition-all mt-4">
+                Consultar por WhatsApp
+            </button>
+        </form>
+    </div>
+</div>
+
+<a href="https://wa.me/543549430573" class="wsp-float" target="_blank" aria-label="WhatsApp">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.438 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
 </a>
 
@@ -111,9 +163,9 @@
     </nav>
 
     <div class="shrink-0">
-        <a href="https://wa.me/5493364014656?text=Hola!%20Me%20gustaría%20realizar%20una%20reserva." target="_blank" class="bg-primary text-black px-2.5 py-2 md:px-6 md:py-2.5 font-bold uppercase text-[7px] md:text-[9px] rounded-full hover:bg-white transition-all inline-block">
+        <button class="open-booking bg-primary text-black px-2.5 py-2 md:px-6 md:py-2.5 font-bold uppercase text-[7px] md:text-[9px] rounded-full hover:bg-white transition-all inline-block">
             Reservar
-        </a>
+        </button>
     </div>
 </header>
 
@@ -131,9 +183,9 @@
             <p class="text-white/80 text-lg font-light mb-10 max-w-xl mx-auto">
                 Diseño contemporáneo y confort absoluto a metros de los principales puntos de interés.
             </p>
-            <a href="https://wa.me/5493364014656?text=Hola!%20Quiero%20consultar%20disponibilidad%20y%20tarifas." target="_blank" class="border border-white/40 text-white px-10 py-4 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-primary hover:text-black hover:border-primary transition-all inline-block">
+            <button class="open-booking border border-white/40 text-white px-10 py-4 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-primary hover:text-black hover:border-primary transition-all inline-block">
                 Ver Disponibilidad
-            </a>
+            </button>
         </div>
     </section>
 
@@ -146,17 +198,12 @@
                 <p class="text-slate-600 dark:text-gray-400 text-base leading-relaxed mb-8">
                     Espacios proyectados para el descanso corporativo y turístico. Equipamiento completo, climatización central y vistas a la ciudad.
                 </p>
-                <a href="https://wa.me/5493364014656?text=Hola!%20Me%20interesan%20las%20Suites." target="_blank" class="text-primary font-bold text-xs uppercase tracking-widest border-b border-primary pb-1 hover:text-slate-900 dark:hover:text-white transition-all">Explorar Unidades</a>
+                <button class="open-booking text-primary font-bold text-xs uppercase tracking-widest border-b border-primary pb-1 hover:text-slate-900 dark:hover:text-white transition-all">Explorar Unidades</button>
             </div>
             <div class="md:col-span-7 relative reveal-right reveal">
                 <div class="img-frame relative w-full aspect-[4/3] md:w-[90%] ml-auto group">
                     <div class="overflow-hidden w-full h-full">
                         <img src="/3.webp" alt="Suite Interior" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
-                    </div>
-                </div>
-                <div class="img-frame absolute -bottom-8 -left-8 hidden md:block w-56 aspect-square group/small">
-                    <div class="overflow-hidden w-full h-full">
-                        <img src="/4.webp" alt="Detalle" class="w-full h-full object-cover transition-transform duration-700 group-hover/small:scale-110">
                     </div>
                 </div>
             </div>
@@ -190,17 +237,6 @@
         </div>
     </section>
 
-    <section class="relative py-32 px-6 text-center bg-[#181611] reveal">
-        <div class="relative z-10 max-w-xl mx-auto flex flex-col items-center gap-6">
-            <h2 class="serif-text text-3xl md:text-4xl text-white italic">Tarifas Corporativas</h2>
-            <p class="text-gray-400 text-sm tracking-wide">Deje su correo para recibir nuestras propuestas de temporada.</p>
-            <div class="flex flex-col sm:flex-row gap-0 w-full justify-center">
-                <input class="bg-white/5 border border-white/10 px-6 py-4 text-white focus:outline-none focus:border-primary text-xs min-w-[300px]" placeholder="Email" type="email"/>
-                <button class="bg-primary text-black px-10 py-4 font-bold uppercase text-[10px] tracking-widest hover:bg-white transition-all">Enviar</button>
-            </div>
-        </div>
-    </section>
-
     <section id="ubicacion" class="py-24 px-6 md:px-20 bg-white dark:bg-[#181611]">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-12 gap-12 items-center">
@@ -211,19 +247,12 @@
                     <div class="space-y-4 text-slate-600 dark:text-gray-400 text-sm">
                         <p class="font-bold text-slate-900 dark:text-white uppercase tracking-widest">Dirección:</p>
                         <p>Av. Estrada 113, X5152 <br /> Villa Carlos Paz, Córdoba, Argentina</p>
-                        <p class="font-bold text-slate-900 dark:text-white uppercase tracking-widest pt-4">Distancias Reales:</p>
-                        <ul class="space-y-2">
-                            <li>• 150m de Av. Cárcano (Acceso Principal)</li>
-                            <li>• 900m del Centro Peatonal (Calle 9 de Julio)</li>
-                            <li>• 1.3km de la Terminal de Ómnibus</li>
-                            <li>• 5 min. de los principales Balnearios</li>
-                        </ul>
                     </div>
-                    <a href="https://maps.app.goo.gl/o1kR4vRCDvC6mREJ8" target="_blank" class="inline-block mt-8 bg-primary text-black px-8 py-3 font-bold uppercase text-[10px] tracking-widest hover:bg-black hover:text-white transition-all">Cómo llegar</a>
+                    <a href="https://maps.google.com" target="_blank" class="inline-block mt-8 bg-primary text-black px-8 py-3 font-bold uppercase text-[10px] tracking-widest hover:bg-black hover:text-white transition-all">Cómo llegar</a>
                 </div>
                 <div class="md:col-span-8 reveal-right reveal">
                     <div class="img-frame w-full h-[450px] overflow-hidden">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3405.0483256053353!2d-64.49841892348545!3d-31.412764196122673!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x942d664f714dca77%3A0x28888c8c753a508c!2sAv.%20Estrada%20113%2C%20X5152%20Villa%20Carlos%20Paz%2C%20C%C3%B3rdoba!5e0!3m2!1ses!2sar!4v1715600000000!5m2!1ses!2sar" class="w-full h-full contrast-[1.05] brightness-[0.98]" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3405.215223019183!2d-64.4984!3d-31.4168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDI1JzAwLjQiUyA2NMKwMjknNTQuMiJX!5e0!3m2!1ses!2sar!4v1700000000000!5m2!1ses!2sar" class="w-full h-full contrast-[1.05] brightness-[0.98]" style="border:0;" allowfullscreen loading="lazy"></iframe>
                     </div>
                 </div>
             </div>
@@ -237,44 +266,74 @@
             <h2 class="text-white text-lg font-bold tracking-[0.2em] uppercase">Inti Huasi</h2>
             <p class="text-gray-500 text-[10px] uppercase tracking-widest mt-2">Centro - Villa Carlos Paz</p>
         </div>
+
+        <a href="https://www.booking.com/hotel/ar/inti-huasi-villa-carlos-paz1.en-gb.html?aid=2284983" target="_blank" class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10 hover:border-primary/50 transition-all group">
+            <div class="bg-primary text-black font-extrabold text-xl w-12 h-12 flex items-center justify-center rounded-lg shadow-[0_0_15px_rgba(244,192,37,0.3)]">
+                8.5
+            </div>
+            <div class="text-left">
+                <p class="text-white text-[10px] font-bold uppercase tracking-widest group-hover:text-primary transition-colors">Muy Bueno</p>
+                <p class="text-gray-500 text-[9px] uppercase tracking-tighter">Puntuación en Booking.com</p>
+            </div>
+        </a>
+
         <div class="text-gray-600 text-[9px] uppercase tracking-[0.3em]">© 2026 Inti Huasi Hotel.</div>
     </div>
 </footer>
 
 <script>
     const init = () => {
+        // --- LÓGICA DEL HEADER ---
         const header = document.getElementById('main-header');
-        
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                header?.classList.add('header-scrolled');
-            } else {
-                header?.classList.remove('header-scrolled');
-            }
-        };
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) header?.classList.add('header-scrolled');
+            else header?.classList.remove('header-scrolled');
+        }, { passive: true });
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        // --- LÓGICA DEL MODAL Y FORMULARIO ---
+        const modal = document.getElementById('booking-modal');
+        const openBtns = document.querySelectorAll('.open-booking');
+        const closeBtn = document.getElementById('close-modal');
+        const wspForm = document.getElementById('wsp-form') as HTMLFormElement;
 
-        // --- SCROLL CENTRADO (CORREGIDO SIN 'THIS') ---
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', (e) => {
+        openBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                
-                // Usamos 'anchor' en lugar de 'this' para evitar el error de tipo 'any'
-                const targetId = anchor.getAttribute('href');
-                if (!targetId) return;
-
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    targetElement.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                }
+                modal?.classList.add('active');
             });
         });
 
+        closeBtn?.addEventListener('click', () => modal?.classList.remove('active'));
+        
+        // Cerrar al hacer clic fuera del contenido
+        modal?.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
+        });
+
+        wspForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Capturar datos
+            const name = (document.getElementById('form-name') as HTMLInputElement).value;
+            const dateIn = (document.getElementById('form-in') as HTMLInputElement).value;
+            const dateOut = (document.getElementById('form-out') as HTMLInputElement).value;
+            const guests = (document.getElementById('form-guests') as HTMLSelectElement).value;
+
+            // Construir mensaje
+            const mensaje = `Hola Inti Huasi! Me gustaría consultar disponibilidad:%0A%0A` +
+                            `*Nombre:* ${name}%0A` +
+                            `*Desde:* ${dateIn}%0A` +
+                            `*Hasta:* ${dateOut}%0A` +
+                            `*Personas:* ${guests}`;
+
+            // URL de WhatsApp
+            const wspUrl = `https://wa.me/543549430573?text=${mensaje}`;
+            
+            window.open(wspUrl, '_blank');
+            modal?.classList.remove('active');
+        });
+
+        // --- REVEAL ANIMATIONS ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('active');
