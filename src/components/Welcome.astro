@@ -237,27 +237,62 @@
         </div>
     </section>
 
-    <section id="ubicacion" class="py-24 px-6 md:px-20 bg-white dark:bg-[#181611]">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid md:grid-cols-12 gap-12 items-center">
-                <div class="md:col-span-4 reveal-left reveal">
-                    <span class="text-primary font-bold text-[10px] uppercase tracking-[0.4em]">Ubicación</span>
-                    <h2 class="serif-text text-4xl md:text-5xl mt-4 mb-6 text-slate-900 dark:text-white">En el epicentro <br />de Carlos Paz</h2>
-                    <div class="w-16 h-px bg-primary mb-8"></div>
-                    <div class="space-y-4 text-slate-600 dark:text-gray-400 text-sm">
-                        <p class="font-bold text-slate-900 dark:text-white uppercase tracking-widest">Dirección:</p>
-                        <p>Av. Estrada 113, X5152 <br /> Villa Carlos Paz, Córdoba, Argentina</p>
-                    </div>
-                    <a href="https://maps.google.com" target="_blank" class="inline-block mt-8 bg-primary text-black px-8 py-3 font-bold uppercase text-[10px] tracking-widest hover:bg-black hover:text-white transition-all">Cómo llegar</a>
-                </div>
-                <div class="md:col-span-8 reveal-right reveal">
-                    <div class="img-frame w-full h-[450px] overflow-hidden">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3405.215223019183!2d-64.4984!3d-31.4168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDI1JzAwLjQiUyA2NMKwMjknNTQuMiJX!5e0!3m2!1ses!2sar!4v1700000000000!5m2!1ses!2sar" class="w-full h-full contrast-[1.05] brightness-[0.98]" style="border:0;" allowfullscreen loading="lazy"></iframe>
-                    </div>
-                </div>
-            </div>
+    <section class="py-24 px-6 md:px-20 bg-white dark:bg-[#181611]">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-12 gap-12 items-center">
+      
+      <!-- CONTENIDO IZQUIERDO -->
+      <div class="md:col-span-4 reveal-left reveal">
+        <span class="text-primary font-bold text-[10px] uppercase tracking-[0.4em]">
+          Ubicación
+        </span>
+
+        <h2 class="serif-text text-4xl md:text-5xl mt-4 mb-6 text-slate-900 dark:text-white">
+          En el epicentro <br />de Carlos Paz
+        </h2>
+
+        <div class="w-16 h-px bg-primary mb-8"></div>
+
+        <div class="space-y-4 text-slate-600 dark:text-gray-400 text-sm">
+          <p class="font-bold text-slate-900 dark:text-white uppercase tracking-widest">
+            Dirección:
+          </p>
+
+          <p>
+            Av. Estrada 113, X5152 <br />
+            Villa Carlos Paz, Córdoba, Argentina
+          </p>
+
+
         </div>
-    </section>
+
+        <a
+          href="https://maps.google.com/?q=Av.+Estrada+113,+Villa+Carlos+Paz"
+          target="_blank"
+          class="inline-block mt-8 bg-primary text-black px-8 py-3 font-bold uppercase text-[10px] tracking-widest hover:bg-black hover:text-white transition-all"
+        >
+          Cómo llegar
+        </a>
+      </div>
+
+      <!-- MAPA -->
+      <div class="md:col-span-8 reveal-right reveal">
+        <div class="img-frame w-full h-[450px] overflow-hidden">
+          <iframe
+            src="https://www.google.com/maps?q=Av.+Estrada+113,+X5152+Villa+Carlos+Paz,+Córdoba,+Argentina&output=embed"
+            class="w-full h-full contrast-[1.05] brightness-[0.98]"
+            style="border:0;"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 </main>
 
 <footer class="bg-[#181611] border-t border-white/5 py-12 px-6 md:px-20">
@@ -327,7 +362,7 @@
                             `*Personas:* ${guests}`;
 
             // URL de WhatsApp
-            const wspUrl = `https://wa.me/543549430573?text=${mensaje}`;
+            const wspUrl = `https://wa.me/5493364014656?text=${mensaje}`;
             
             window.open(wspUrl, '_blank');
             modal?.classList.remove('active');
