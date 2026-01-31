@@ -1,5 +1,5 @@
 ---
-// index.astro - Inti Huasi Hotel Carlos Paz con Formulario de WhatsApp
+// index.astro - Inti Huasi Hotel Carlos Paz
 ---
 
 <!DOCTYPE html>
@@ -18,15 +18,70 @@
             --primary: #f4c025; 
             --bg-dark: #181611; 
         }
+        
+        html { scroll-behavior: smooth; }
+        *, *::before, *::after { box-sizing: border-box; }
+
         body { 
             background-color: var(--bg-dark); 
             margin: 0; 
+            padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif; 
             color: white; 
             overflow-x: hidden;
+            width: 100%;
             -webkit-font-smoothing: antialiased;
         }
-        .hero-section { min-height: 100vh; position: relative; background: var(--bg-dark); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        .hero-section { 
+            min-height: 100vh; 
+            position: relative; 
+            background: var(--bg-dark); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+        }
+
+        /* EFECTO DE PARTÍCULAS INFINITAS Y RANDOM */
+        .particles-container {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .hero-particles {
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background-image: radial-gradient(circle, var(--primary) 1px, transparent 1px);
+            opacity: 0.12;
+            will-change: transform;
+        }
+
+        /* Capa 1: Movimiento lento hacia arriba-derecha */
+        .p-1 {
+            background-size: 80px 80px;
+            animation: float-random-1 60s linear infinite;
+        }
+
+        /* Capa 2: Movimiento rápido hacia arriba-izquierda */
+        .p-2 {
+            background-size: 50px 50px;
+            opacity: 0.08;
+            animation: float-random-2 40s linear infinite;
+        }
+
+        @keyframes float-random-1 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(80px, -80px); } /* Múltiplo de background-size para loop infinito */
+        }
+
+        @keyframes float-random-2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100px, -100px); } /* Múltiplo de background-size para loop infinito */
+        }
         
         .reveal { opacity: 0; transform: translateY(30px); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal-left { opacity: 0; transform: translateX(-50px); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
@@ -37,61 +92,53 @@
             border: 1px solid rgba(244, 192, 37, 0.25); 
             padding: 8px; 
             background: rgba(24, 22, 17, 0.5);
-            backdrop-blur: 5px;
+            backdrop-filter: blur(5px);
         }
 
         #main-header {
-            top: 1rem;
-            left: 0.5rem;
-            right: 0.5rem;
-            width: auto;
-            margin: 0 auto;
-            max-width: calc(100% - 1rem);
+            position: fixed;
+            top: 1rem; left: 0; right: 0;
+            width: 95%; margin: 0 auto;
+            max-width: 1200px;
+            z-index: 50;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @media (min-width: 768px) {
-            #main-header {
-                top: 1rem;
-                left: 1rem;
-                right: 1rem;
-                max-width: calc(100% - 2rem);
-            }
         }
 
         .header-scrolled {
             top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
+            width: 100% !important;
             max-width: 100% !important;
             border-radius: 0 !important;
-            background-color: rgba(24, 22, 17, 0.75) !important;
+            background-color: rgba(24, 22, 17, 0.85) !important;
             backdrop-filter: blur(15px) !important;
-            -webkit-backdrop-filter: blur(15px) !important;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-            padding-top: 0.75rem !important;
-            padding-bottom: 0.75rem !important;
         }
+
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0%; height: 1px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
 
         .wsp-float {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 20px; right: 20px;
             background: #25d366;
             color: white;
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
         }
         .wsp-float:hover { transform: scale(1.1); }
 
-        /* Estilos para el Modal */
         #booking-modal {
             display: none;
             position: fixed;
@@ -99,8 +146,7 @@
             z-index: 1000;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
-            align-items: center;
-            justify-content: center;
+            align-items: center; justify-content: center;
             padding: 20px;
         }
         #booking-modal.active { display: flex; }
@@ -130,15 +176,15 @@
                 </div>
             </div>
             <div>
-    <label class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Personas</label>
-    <select id="form-guests" class="w-full bg-white/5 border border-white/10 p-3 text-white focus:border-primary outline-none text-sm appearance-none">
-        <option value="1" class="text-black">1 Persona</option>
-        <option value="2" selected class="text-black">2 Personas</option>
-        <option value="3" class="text-black">3 Personas</option>
-        <option value="4" class="text-black">4 Personas</option>
-		<option value="4" class="text-black">5 o mas Personas</option>
-    </select>
-</div>
+                <label class="text-[9px] uppercase tracking-widest text-gray-400 block mb-1">Personas</label>
+                <select id="form-guests" class="w-full bg-white/5 border border-white/10 p-3 text-white focus:border-primary outline-none text-sm appearance-none">
+                    <option value="1">1 Persona</option>
+                    <option value="2" selected>2 Personas</option>
+                    <option value="3">3 Personas</option>
+                    <option value="4">4 Personas</option>
+                    <option value="5+">5 o mas Personas</option>
+                </select>
+            </div>
             <button type="submit" class="w-full bg-primary text-black font-bold py-4 uppercase text-[10px] tracking-widest hover:bg-white transition-all mt-4">
                 Consultar por WhatsApp
             </button>
@@ -150,20 +196,18 @@
     <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.438 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
 </a>
 
-<header id="main-header" class="fixed z-50 flex items-center justify-between border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl rounded-2xl px-2 py-3 md:px-12 md:py-4 overflow-hidden">
-    <div class="flex items-center gap-1 md:gap-4 shrink-0">
-        <img src="/2.webp" alt="Logo" class="size-6 md:size-10 object-contain">
-        <h2 class="text-white text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Inti Huasi</h2>
+<header id="main-header" class="flex items-center justify-between border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl rounded-2xl px-2 py-3 md:px-12 md:py-4">
+    <div class="flex items-center gap-1.5 md:gap-4 shrink-0">
+        <img src="/2.webp" alt="Logo" class="size-7 md:size-10 object-contain">
+        <h2 class="hidden md:block text-white text-lg font-bold tracking-widest uppercase whitespace-nowrap">Inti Huasi</h2>
     </div>
-
-    <nav class="flex items-center gap-1.5 sm:gap-4 md:gap-10">
-        <a class="nav-link text-white text-[7px] md:text-[10px] font-semibold uppercase tracking-wider hover:text-primary transition-colors whitespace-nowrap" href="#habitaciones">Habitaciones</a>
-        <a class="nav-link text-white text-[7px] md:text-[10px] font-semibold uppercase tracking-wider hover:text-primary transition-colors whitespace-nowrap" href="#servicios">Servicios</a>
-        <a class="nav-link text-white text-[7px] md:text-[10px] font-semibold uppercase tracking-wider hover:text-primary transition-colors whitespace-nowrap" href="#ubicacion">Ubicación</a>
+    <nav class="flex items-center gap-2 sm:gap-4 md:gap-10">
+        <a class="nav-link text-white text-[8px] md:text-[10px] font-semibold uppercase tracking-wider hover:text-primary transition-colors whitespace-nowrap" href="#habitaciones">Habitaciones</a>
+        <a class="nav-link text-white text-[8px] md:text-[10px] font-semibold uppercase tracking-wider hover:text-primary transition-colors whitespace-nowrap" href="#servicios">Servicios</a>
+        <a class="nav-link text-white text-[8px] md:text-[10px] font-semibold uppercase tracking-wider hover:text-primary transition-colors whitespace-nowrap" href="#ubicacion">Ubicación</a>
     </nav>
-
     <div class="shrink-0">
-        <button class="open-booking bg-primary text-black px-2 py-2 md:px-6 md:py-2.5 font-extrabold uppercase text-[7px] md:text-[9px] rounded-full hover:bg-white transition-all inline-block">
+        <button class="open-booking bg-primary text-black px-3 py-2 md:px-6 md:py-2.5 font-bold uppercase text-[7px] md:text-[9px] rounded-full hover:bg-white transition-all inline-block">
             Reservar
         </button>
     </div>
@@ -173,17 +217,22 @@
     <section class="hero-section">
         <div class="absolute inset-0">
             <img src="/1.webp" alt="Hotel Inti Huasi" class="w-full h-full object-cover animate-subtle-zoom" fetchpriority="high">
-            <div class="absolute inset-0 bg-black/50"></div>
+            <div class="absolute inset-0 bg-black/60"></div>
+            <div class="particles-container">
+                <div class="hero-particles p-1"></div>
+                <div class="hero-particles p-2"></div>
+            </div>
         </div>
+        
         <div class="relative z-10 text-center px-4 max-w-5xl reveal active">
-            <span class="text-primary font-bold text-[10px] uppercase tracking-[0.6em] mb-4 block">Villa Carlos Paz, Argentina</span>
-            <h1 class="serif-text text-white text-5xl md:text-7xl font-light mb-8 leading-tight">
+            <span class="text-primary font-bold text-[10px] uppercase tracking-[0.6em] mb-4 block animate-fade-in-up">Villa Carlos Paz, Argentina</span>
+            <h1 class="serif-text text-white text-5xl md:text-7xl font-light mb-8 leading-tight animate-fade-in-up" style="animation-delay: 0.2s">
                 Hospitalidad Superior <br/><span class="text-primary">en el Corazón de la Ciudad</span>
             </h1>
-            <p class="text-white/80 text-lg font-light mb-10 max-w-xl mx-auto">
+            <p class="text-white/80 text-lg font-light mb-10 max-w-xl mx-auto animate-fade-in-up" style="animation-delay: 0.4s">
                 Diseño contemporáneo y confort absoluto a metros de los principales puntos de interés.
             </p>
-            <button class="open-booking border border-white/40 text-white px-10 py-4 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-primary hover:text-black hover:border-primary transition-all inline-block">
+            <button class="open-booking border border-white/40 text-white px-10 py-4 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-primary hover:text-black hover:border-primary transition-all inline-block animate-fade-in-up" style="animation-delay: 0.6s">
                 Ver Disponibilidad
             </button>
         </div>
@@ -200,10 +249,16 @@
                 </p>
                 <button class="open-booking text-primary font-bold text-xs uppercase tracking-widest border-b border-primary pb-1 hover:text-slate-900 dark:hover:text-white transition-all">Explorar Unidades</button>
             </div>
+            
             <div class="md:col-span-7 relative reveal-right reveal">
                 <div class="img-frame relative w-full aspect-[4/3] md:w-[90%] ml-auto group">
                     <div class="overflow-hidden w-full h-full">
-                        <img src="/3.webp" alt="Suite Interior" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                        <img src="/3.webp" alt="Suite Interior" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                    </div>
+                    <div class="absolute -bottom-10 -left-10 w-48 h-64 hidden md:block img-frame z-20 group/small">
+                        <div class="overflow-hidden w-full h-full">
+                            <img src="/4.webp" alt="Detalle" class="w-full h-full object-cover transition-transform duration-1000 group-hover/small:scale-110">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -237,7 +292,7 @@
         </div>
     </section>
 
-    <section class="py-24 px-6 md:px-20 bg-white dark:bg-[#181611]">
+<section class="py-24 px-6 md:px-20 bg-white dark:bg-[#181611]">
   <div class="max-w-7xl mx-auto">
     <div class="grid md:grid-cols-12 gap-12 items-center">
       
@@ -262,6 +317,7 @@
             Av. Estrada 113, X5152 <br />
             Villa Carlos Paz, Córdoba, Argentina
           </p>
+
 
 
         </div>
@@ -292,40 +348,26 @@
     </div>
   </div>
 </section>
-
 </main>
 
-<footer class="bg-[#181611] border-t border-white/5 py-12 px-6 md:px-20">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-8">
+<footer class="bg-[#181611] border-t border-white/5 py-12 px-6 md:px-20 text-center">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div>
             <h2 class="text-white text-lg font-bold tracking-[0.2em] uppercase">Inti Huasi</h2>
             <p class="text-gray-500 text-[10px] uppercase tracking-widest mt-2">Centro - Villa Carlos Paz</p>
         </div>
-
-        <a href="https://www.booking.com/hotel/ar/inti-huasi-villa-carlos-paz1.en-gb.html?aid=2284983" target="_blank" class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10 hover:border-primary/50 transition-all group">
-            <div class="bg-primary text-black font-extrabold text-xl w-12 h-12 flex items-center justify-center rounded-lg shadow-[0_0_15px_rgba(244,192,37,0.3)]">
-                8.5
-            </div>
-            <div class="text-left">
-                <p class="text-white text-[10px] font-bold uppercase tracking-widest group-hover:text-primary transition-colors">Muy Bueno</p>
-                <p class="text-gray-500 text-[9px] uppercase tracking-tighter">Puntuación en Booking.com</p>
-            </div>
-        </a>
-
         <div class="text-gray-600 text-[9px] uppercase tracking-[0.3em]">© 2026 Inti Huasi Hotel.</div>
     </div>
 </footer>
 
 <script>
     const init = () => {
-        // --- LÓGICA DEL HEADER ---
         const header = document.getElementById('main-header');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) header?.classList.add('header-scrolled');
             else header?.classList.remove('header-scrolled');
         }, { passive: true });
 
-        // --- LÓGICA DEL MODAL Y FORMULARIO ---
         const modal = document.getElementById('booking-modal');
         const openBtns = document.querySelectorAll('.open-booking');
         const closeBtn = document.getElementById('close-modal');
@@ -339,42 +381,22 @@
         });
 
         closeBtn?.addEventListener('click', () => modal?.classList.remove('active'));
-        
-        // Cerrar al hacer clic fuera del contenido
-        modal?.addEventListener('click', (e) => {
-            if (e.target === modal) modal.classList.remove('active');
-        });
+        modal?.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
         wspForm?.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            // Capturar datos
             const name = (document.getElementById('form-name') as HTMLInputElement).value;
             const dateIn = (document.getElementById('form-in') as HTMLInputElement).value;
             const dateOut = (document.getElementById('form-out') as HTMLInputElement).value;
             const guests = (document.getElementById('form-guests') as HTMLSelectElement).value;
-
-            // Construir mensaje
-            const mensaje = `Hola Inti Huasi! Me gustaría consultar disponibilidad:%0A%0A` +
-                            `*Nombre:* ${name}%0A` +
-                            `*Desde:* ${dateIn}%0A` +
-                            `*Hasta:* ${dateOut}%0A` +
-                            `*Personas:* ${guests}`;
-
-            // URL de WhatsApp
-            const wspUrl = `https://wa.me/5493364014656?text=${mensaje}`;
-            
-            window.open(wspUrl, '_blank');
+            const mensaje = `Hola Inti Huasi! Me gustaría consultar disponibilidad:%0A%0A*Nombre:* ${name}%0A*Desde:* ${dateIn}%0A*Hasta:* ${dateOut}%0A*Personas:* ${guests}`;
+            window.open(`https://wa.me/5493364014656?text=${mensaje}`, '_blank');
             modal?.classList.remove('active');
         });
 
-        // --- REVEAL ANIMATIONS ---
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
     };
     
@@ -389,29 +411,17 @@
         --color-background-dark: #181611;
     }
     .serif-text { font-family: 'Georgia', serif; }
+    
     @keyframes subtle-zoom { from { transform: scale(1); } to { transform: scale(1.05); } }
     .animate-subtle-zoom { animation: subtle-zoom 20s infinite alternate ease-in-out; }
-	html, body {
-    max-width: 100vw;
-    overflow-x: hidden;
-    position: relative;
-}
 
-/* Corrige el color del texto en el dropdown de pasajeros */
-#form-guests option {
-    background-color: #1f1c15; /* Fondo oscuro igual al modal */
-    color: white;
-}
-
-/* Ajuste fino para el header en pantallas extremadamente pequeñas */
-@media (max-width: 360px) {
-    .nav-link {
-        font-size: 6.5px !important;
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    #main-header {
-        px: 1.5px !important;
+    .animate-fade-in-up {
+        animation: fade-in-up 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     }
-}
 </style>
 </body>
 </html>
